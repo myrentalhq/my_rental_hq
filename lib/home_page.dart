@@ -1,11 +1,9 @@
-import 'package:charts_flutter_new/flutter.dart' as charts;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RentalHomePage extends StatelessWidget {
   final List<Map<String, dynamic>> properties = [
-    {'name': 'Property 1', 'earnings': 2000},
-    {'name': 'Property 2', 'earnings': 2500},
-    {'name': 'Property 3', 'earnings': 3000},
+
   ];
 
   @override
@@ -29,27 +27,33 @@ class RentalHomePage extends StatelessWidget {
           ),
           SizedBox(height: 32),
           Expanded(
-            child: ListView.builder(
-              itemCount: properties.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text(properties[index]['name']),
-                  subtitle:
-                      Text('Earnings: \$${properties[index]['earnings']}'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PropertyDetails(
-                          property: properties[index],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+            child: properties.isEmpty
+                ? Center(
+                    child: Text(
+                      'No properties available, click on the Add Property button',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: properties.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text(properties[index]['name']),
+                        subtitle: Text('Earnings: \$${properties[index]['earnings']}'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PropertyDetails(
+                                property: properties[index],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
           ),
         ],
       ),
@@ -75,6 +79,7 @@ class RentalHomePage extends StatelessWidget {
     );
   }
 }
+
 
 class PropertyDetails extends StatelessWidget {
   final Map<String, dynamic> property;
