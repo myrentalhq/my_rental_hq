@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_rental_hq/home_page.dart';
+
 
 class CreateAccountScreen extends StatefulWidget {
   @override
@@ -34,7 +37,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     });
 
     // Navigate to the homepage
-    Navigator.pop(context);
+      Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => RentalHomePage()),
+    );
   }
 
   @override
@@ -103,7 +109,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                   validator: (value) {
                     if (value!.trim().isEmpty) return 'Please enter a password';
-                    if (value!.length < 6) return 'Password must be at least 6 characters long';
+                    if (value.length < 6) return 'Password must be at least 6 characters long';
                     return null;
                   },
                 ),

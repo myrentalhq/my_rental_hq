@@ -2,107 +2,142 @@ import 'package:charts_flutter_new/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class RentalHomePage extends StatelessWidget {
+  final List<Map<String, dynamic>> properties = [
+    {'name': 'Property 1', 'earnings': 2000},
+    {'name': 'Property 2', 'earnings': 2500},
+    {'name': 'Property 3', 'earnings': 3000},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.grey[850],
-        title: Text('My Rental HQ'),
+        title: Text('MyRentalHQ'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 16),
-            Text(
-              'Spending per Property',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            SizedBox(height: 16),
-            Container(
-              height: 250,
-              padding: EdgeInsets.all(16),
-              child: SpendingChart.create(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Handle add property functionality here
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Welcome to MyRentalHQ!',
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Your property management solution.',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          SizedBox(height: 32),
+          Expanded(
+            child: ListView.builder(
+              itemCount: properties.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text(properties[index]['name']),
+                  subtitle:
+                      Text('Earnings: \$${properties[index]['earnings']}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PropertyDetails(
+                          property: properties[index],
+                        ),
+                      ),
+                    );
                   },
-                  icon: Icon(Icons.add),
-                  label: Text('Add Property'),
-                  style: ElevatedButton.styleFrom(primary: Colors.grey[850]),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Handle manage property functionality here
-                  },
-                  icon: Icon(Icons.manage_accounts),
-                  label: Text('Manage Property'),
-                  style: ElevatedButton.styleFrom(primary: Colors.grey[850]),
-                ),
-              ],
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class SpendingChart extends StatelessWidget {
-  final List<charts.Series<PropertySpending, String>> seriesList;
-  final bool animate;
-
-  SpendingChart(this.seriesList, {required this.animate});
-
-  factory SpendingChart.create() {
-    return SpendingChart(
-      _createSampleData(),
-      animate: true,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return charts.BarChart(
-      seriesList,
-      animate: animate,
-      domainAxis: charts.OrdinalAxisSpec(
-        renderSpec: charts.SmallTickRendererSpec(
-          labelStyle: charts.TextStyleSpec(
-            fontSize: 14,
-            color: charts.ColorUtil.fromDartColor(Colors.white),
+      floatingActionButton: Container(
+        width: 100, // Set the desired width
+        height: 100, // Set the desired height
+        child: FloatingActionButton(
+          onPressed: () {
+            // Implement navigation or action here.
+          },
+          backgroundColor: Colors.blue,
+          tooltip: 'Add Property',
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Center the content vertically
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              //Icon(Icons.home),
+              Text('Add Property'),
+            ],
           ),
         ),
       ),
     );
   }
-
-  static List<charts.Series<PropertySpending, String>> _createSampleData() {
-    final data = [
-      PropertySpending('Property 1', 50),
-      PropertySpending('Property 2', 30),
-      PropertySpending('Property 3', 70),
-    ];
-
-    return [
-      charts.Series<PropertySpending, String>(
-        id: 'Spending',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (PropertySpending spending, _) => spending.property,
-        measureFn: (PropertySpending spending, _) => spending.spending,
-        data: data,
-      )
-    ];
-  }
 }
 
-class PropertySpending {
-  final String property;
-  final int spending;
+class PropertyDetails extends StatelessWidget {
+  final Map<String, dynamic> property;
 
-  PropertySpending(this.property, this.spending);
+  PropertyDetails({required this.property});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text('${property['name']} Details'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Tenant Information:',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            // Replace the below Container with your tenant information widget.
+            Container(
+              height: 100,
+              color: Colors.grey.shade700,
+              child: Center(child: Text('Tenant Information')),
+            ),
+            SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Water and Electricity Bills:',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            // Replace the below Container with your bills widget.
+            Container(
+              height: 100,
+              color: Colors.grey.shade700,
+              child: Center(child: Text('Water and Electricity Bills')),
+            ),
+            SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Chat with Tenant:',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            // Replace the below Container with your chat widget.
+            Container(
+              height: 300,
+              color: Colors.grey.shade700,
+              child: Center(child: Text('Chat with Tenant')),
+            ),
+            SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
 }

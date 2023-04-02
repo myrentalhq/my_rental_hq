@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_rental_hq/home_page.dart';
 import 'package:my_rental_hq/log_in.dart';
+import 'package:my_rental_hq/welcome_page_.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -14,10 +17,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My Rental HQ',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: WelcomePage(),
     );
   }
 }
