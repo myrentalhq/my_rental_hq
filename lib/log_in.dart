@@ -38,7 +38,7 @@ Future<void> _signInWithEmail() async {
     // Navigate to the landlord screen
     Navigator.pushReplacement(
       context,
-      CupertinoPageRoute(builder: (context) => LandLordHomePage()),
+      CupertinoPageRoute(builder: (context) => LandlordDashboard()),
     );
   } else {
     // Navigate to the tenant screen
@@ -69,7 +69,7 @@ Widget build(BuildContext context) {
                   const Text(
                     'Welcome to My Rental HQ',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.white,
                       fontSize: 24,
                     ),
                   ),

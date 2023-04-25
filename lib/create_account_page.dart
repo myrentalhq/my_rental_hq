@@ -34,7 +34,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       // Navigate to the landlord screen
       Navigator.pushReplacement(
         context,
-        CupertinoPageRoute(builder: (context) => LandLordHomePage()),
+        CupertinoPageRoute(builder: (context) => LandlordDashboard()),
       );
     } else if (role == 'Tenant') {
       // Navigate to the tenant screen
@@ -64,7 +64,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     const Text(
                       'Create an Account',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: Colors.white,
                         fontSize: 24,
                       ),
                     ),
