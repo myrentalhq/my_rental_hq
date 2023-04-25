@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:my_rental_hq/home_page.dart';
-
+import 'package:my_rental_hq/tenant_page.dart';
+import 'package:my_rental_hq/welcome_page_.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   @override
@@ -10,180 +10,192 @@ class CreateAccountScreen extends StatefulWidget {
 }
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
 
-  bool _acceptTerms = false;
   bool _isLoading = false;
+  String _userType = 'Tenant';
 
-  Future<void> _createAccount() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
+  Future<void> createAccount(String role) async {
     setState(() {
       _isLoading = true;
     });
 
     // Simulate account creation process (Replace this with your actual account creation implementation)
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     setState(() {
       _isLoading = false;
     });
 
-    // Navigate to the homepage
-      Navigator.push(
-      context,
-      CupertinoPageRoute(builder: (context) => RentalHomePage()),
-    );
+    if (role == 'Landlord') {
+      // Navigate to the landlord screen
+      Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(builder: (context) => LandLordHomePage()),
+      );
+    } else if (role == 'Tenant') {
+      // Navigate to the tenant screen
+      Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(builder: (context) => TenantDashboard()),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black87,
-      appBar: AppBar(
-        title: Text('Create an Account'),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _fullNameController,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    labelText: 'Full Name',
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+    return Material(
+      child: CupertinoPageScaffold(
+        backgroundColor: Colors.black,
+        child: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Create an Account',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 24,
+                      ),
                     ),
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp('[a-zA-Z\\s]')),
-                  ],
-                  validator: (value) {
-                    if (value!.trim().isEmpty) return 'Please enter your full name';
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: CupertinoTextField(
+                        controller: _fullNameController,
+                        keyboardType: TextInputType.text,
+                        placeholder: 'Full Name',
+                        placeholderStyle:
+                            const TextStyle(color: CupertinoColors.systemGrey),
+                        style: const TextStyle(color: CupertinoColors.white),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: CupertinoColors.systemGrey),
+                        ),
+                      ),
                     ),
-                  ),
-                  validator: (value) {
-                    if (value!.trim().isEmpty) return 'Please enter your email';
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value))
-                      return 'Please enter a valid email address';
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: CupertinoTextField(
+                        controller: _phoneNumberController,
+                        keyboardType: TextInputType.phone,
+                        placeholder: 'Phone Number',
+                        placeholderStyle:
+                            const TextStyle(color: CupertinoColors.systemGrey),
+                        style: const TextStyle(color: CupertinoColors.white),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: CupertinoColors.systemGrey),
+                        ),
+                      ),
                     ),
-                  ),
-                  validator: (value) {
-                    if (value!.trim().isEmpty) return 'Please enter a password';
-                    if (value.length < 6) return 'Password must be at least 6 characters long';
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: CupertinoTextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        placeholder: 'Email',
+                        placeholderStyle:
+                            const TextStyle(color: CupertinoColors.systemGrey),
+                        style: const TextStyle(color: CupertinoColors.white),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: CupertinoColors.systemGrey),
+                        ),
+                      ),
                     ),
-                  ),
-                  validator: (value) {
-                    if (value!.trim().isEmpty) return 'Please confirm your password';
-                  },     
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                  value: _acceptTerms,
-                  activeColor: Colors.blue,
-                  onChanged: (value) {
-                    setState(() {
-                      _acceptTerms = value!;
-                    });
-                  },
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: RichText(
-                    text: TextSpan(
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: CupertinoTextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        keyboardType: TextInputType.visiblePassword,
+                        placeholder: 'Password',
+                        placeholderStyle:
+                            const TextStyle(color: CupertinoColors.systemGrey),
+                        style: const TextStyle(color: CupertinoColors.white),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: CupertinoColors.systemGrey),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextSpan(
-                          text: 'I accept the ',
+                        Text(
+                          'Tenant',
                           style: TextStyle(color: Colors.white),
                         ),
-                        TextSpan(
-                          text: 'Terms and Conditions',
-                          style: TextStyle(color: Colors.blue),
-                          // Add an onTap event to navigate to the Terms and Conditions screen
+                        Radio<String>(
+                          value: 'Tenant',
+                          groupValue: _userType,
+                          activeColor: Colors.blue,
+                          onChanged: (value) {
+                            setState(() {
+                              _userType = value!;
+                            });
+                          },
+                        ),
+                        Text(
+                          'Landlord',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Radio<String>(
+                          value: 'Landlord',
+                          groupValue: _userType,
+                          activeColor: Colors.blue,
+                          onChanged: (value) {
+                            setState(() {
+                              _userType = value!;
+                            });
+                          },
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: CupertinoButton.filled(
+                        onPressed:
+                            _isLoading ? null : () => createAccount(_userType),
+                        child: const Text('Create Account'),
+                      ),
+                    ),
+                    if (_isLoading)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: CupertinoActivityIndicator(),
+                      ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 32),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _createAccount,
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: _isLoading
-                    ? CircularProgressIndicator()
-                    : Text('Create Account', style: TextStyle(fontSize: 18)),
               ),
             ),
-          ],
+          ),
         ),
       ),
-    ),
-  ),
-);
-}
+    );
+  }
 }
